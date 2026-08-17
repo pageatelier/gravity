@@ -1431,4 +1431,20 @@ linear-gradient(135deg,#201f1c 0%,#555047 35%,#2c2a26 65%,#111 100%)}
     box-sizing:border-box;
   }
 }
-/* ===== /MOBILE CONTACT CTA ALIGN FIX ===== */
+
+
+.hero__cta{
+  transition:
+    opacity .35s ease,
+    transform .35s ease,
+    background .28s var(--ease),
+    color .28s var(--ease);
+}
+
+@media (max-width:960px){
+  .hero__cta.is-hidden{
+    opacity:0;
+    transform:translateY(-8px) !important;
+    pointer-events:none;
+  }
+}
