@@ -552,7 +552,7 @@
   </footer>
 
   <script
-    src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=3n7w685tux&submodules=geocoder"
+    src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=3n7w685tux"
   ></script>
 
   <script>
@@ -561,92 +561,31 @@
       if (!mapElement || !window.naver || !naver.maps) return;
 
       /*
-        Geocoding이 꺼져 있어도 마커가 사라지지 않도록
-        GRAVITY 인근 좌표를 기본값으로 사용합니다.
-        주소 검색이 성공하면 아래에서 정확한 위치로 자동 보정됩니다.
+        마커 문제 분리를 위해 Geocoding / 커스텀 HTML 아이콘을 전부 제거한
+        가장 단순한 NAVER 기본 마커 버전입니다.
       */
-      const fallbackCenter = new naver.maps.LatLng(37.5207, 126.8600);
+      const gravityPosition = new naver.maps.LatLng(37.5207, 126.8600);
 
       const map = new naver.maps.Map(mapElement, {
-        center: fallbackCenter,
-        zoom: 18,
-        minZoom: 13,
+        center: gravityPosition,
+        zoom: 17,
         zoomControl: true,
         zoomControlOptions: {
           position: naver.maps.Position.RIGHT_CENTER
         },
         mapDataControl: false,
-        scaleControl: false,
-        logoControlOptions: {
-          position: naver.maps.Position.BOTTOM_LEFT
-        }
+        scaleControl: false
       });
 
       const marker = new naver.maps.Marker({
-        position: fallbackCenter,
+        position: gravityPosition,
         map: map,
-        title: "GRAVITY MUSIC STUDIO",
-        icon: {
-          content: [
-            '<div class="gravity-map-marker">',
-              '<span class="gravity-map-marker__dot"></span>',
-              '<span class="gravity-map-marker__label">GRAVITY</span>',
-            '</div>'
-          ].join(""),
-          anchor: new naver.maps.Point(22, 22)
-        }
+        visible: true,
+        zIndex: 999
       });
 
-      function moveToExactPosition(position) {
-        marker.setPosition(position);
-        map.setCenter(position);
-      }
-
-      // Geocoding API가 활성화돼 있으면 정확한 주소 좌표로 자동 이동.
-      if (
-        naver.maps.Service &&
-        typeof naver.maps.Service.geocode === "function"
-      ) {
-        naver.maps.Service.geocode(
-          { query: "서울특별시 양천구 은행정로1길 10" },
-          function (status, response) {
-            if (status !== naver.maps.Service.Status.OK) {
-              console.info(
-                "GRAVITY: Geocoding unavailable. Showing the fallback marker."
-              );
-              return;
-            }
-
-            let lat = null;
-            let lng = null;
-
-            if (
-              response &&
-              response.v2 &&
-              response.v2.addresses &&
-              response.v2.addresses.length
-            ) {
-              lng = Number(response.v2.addresses[0].x);
-              lat = Number(response.v2.addresses[0].y);
-            }
-
-            if (
-              (lat === null || lng === null) &&
-              response &&
-              response.result &&
-              response.result.items &&
-              response.result.items.length
-            ) {
-              lng = Number(response.result.items[0].point.x);
-              lat = Number(response.result.items[0].point.y);
-            }
-
-            if (Number.isFinite(lat) && Number.isFinite(lng)) {
-              moveToExactPosition(new naver.maps.LatLng(lat, lng));
-            }
-          }
-        );
-      }
+      window.gravityMap = map;
+      window.gravityMarker = marker;
 
       window.addEventListener("resize", function () {
         naver.maps.Event.trigger(map, "resize");
