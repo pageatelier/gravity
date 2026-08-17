@@ -560,12 +560,16 @@
       const mapElement = document.getElementById("naver-map");
       if (!mapElement || !window.naver || !naver.maps) return;
 
-      // 주소 검색이 일시적으로 실패해도 신정동 인근 지도가 먼저 보이도록 하는 fallback.
-      const fallbackCenter = new naver.maps.LatLng(37.5221, 126.8543);
+      /*
+        Geocoding이 꺼져 있어도 마커가 사라지지 않도록
+        GRAVITY 인근 좌표를 기본값으로 사용합니다.
+        주소 검색이 성공하면 아래에서 정확한 위치로 자동 보정됩니다.
+      */
+      const fallbackCenter = new naver.maps.LatLng(37.5207, 126.8600);
 
       const map = new naver.maps.Map(mapElement, {
         center: fallbackCenter,
-        zoom: 17,
+        zoom: 18,
         minZoom: 13,
         zoomControl: true,
         zoomControlOptions: {
@@ -578,35 +582,44 @@
         }
       });
 
-      function addGravityMarker(position) {
-        map.setCenter(position);
+      const marker = new naver.maps.Marker({
+        position: fallbackCenter,
+        map: map,
+        title: "GRAVITY MUSIC STUDIO",
+        icon: {
+          content: [
+            '<div class="gravity-map-marker">',
+              '<span class="gravity-map-marker__dot"></span>',
+              '<span class="gravity-map-marker__label">GRAVITY</span>',
+            '</div>'
+          ].join(""),
+          anchor: new naver.maps.Point(22, 22)
+        }
+      });
 
-        new naver.maps.Marker({
-          position: position,
-          map: map,
-          title: "GRAVITY MUSIC STUDIO",
-          icon: {
-            content:
-              '<div style="width:18px;height:18px;border-radius:50%;background:#111;border:4px solid #fff;box-shadow:0 2px 12px rgba(0,0,0,.35);"></div>',
-            anchor: new naver.maps.Point(9, 9)
-          }
-        });
+      function moveToExactPosition(position) {
+        marker.setPosition(position);
+        map.setCenter(position);
       }
 
-      // 정확한 도로명 주소를 좌표로 변환해 마커를 배치합니다.
-      if (naver.maps.Service && naver.maps.Service.geocode) {
+      // Geocoding API가 활성화돼 있으면 정확한 주소 좌표로 자동 이동.
+      if (
+        naver.maps.Service &&
+        typeof naver.maps.Service.geocode === "function"
+      ) {
         naver.maps.Service.geocode(
           { query: "서울특별시 양천구 은행정로1길 10" },
           function (status, response) {
             if (status !== naver.maps.Service.Status.OK) {
-              console.warn("GRAVITY map geocoding failed. Check that Geocoding is enabled in the NAVER Maps Application.");
+              console.info(
+                "GRAVITY: Geocoding unavailable. Showing the fallback marker."
+              );
               return;
             }
 
             let lat = null;
             let lng = null;
 
-            // 현재 응답 형식
             if (
               response &&
               response.v2 &&
@@ -617,7 +630,6 @@
               lat = Number(response.v2.addresses[0].y);
             }
 
-            // 구형/호환 응답 형식
             if (
               (lat === null || lng === null) &&
               response &&
@@ -630,13 +642,12 @@
             }
 
             if (Number.isFinite(lat) && Number.isFinite(lng)) {
-              addGravityMarker(new naver.maps.LatLng(lat, lng));
+              moveToExactPosition(new naver.maps.LatLng(lat, lng));
             }
           }
         );
       }
 
-      // 반응형 레이아웃 변경 후 지도 타일이 잘리는 현상 방지
       window.addEventListener("resize", function () {
         naver.maps.Event.trigger(map, "resize");
       });
