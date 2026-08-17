@@ -318,7 +318,8 @@ linear-gradient(135deg,#201f1c 0%,#555047 35%,#2c2a26 65%,#111 100%)}
 
 .marquee{overflow:hidden;border-top:1px solid var(--light-line);border-bottom:1px solid var(--light-line);padding:17px 0}
 .marquee__track{display:flex;width:max-content;animation:marquee 26s linear infinite;font-size:11px;letter-spacing:.18em}
-.marquee__track span{white-space:nowrap;padding-right:40px}
+.marquee__track span{white-space:nowrap;
+  padding-right:0;}
 @keyframes marquee{to{transform:translateX(-50%)}}
 
 .lessons{padding:var(--section-y) var(--pad-x) 90px}
@@ -1447,3 +1448,9 @@ linear-gradient(135deg,#201f1c 0%,#555047 35%,#2c2a26 65%,#111 100%)}
 }
 /* ===== /REVIEWS SECTION TITLE ===== */
 
+.marquee__track i{
+  font-style:normal;
+  opacity:.4;
+  font-size:.65em;
+  margin:0 14px;
+}
