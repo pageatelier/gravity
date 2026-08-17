@@ -89,8 +89,8 @@ body.is-link .cursor-follower{width:54px;height:54px;border-color:#fff}
 .mobile-menu nav,.mobile-menu p{position:relative;z-index:1}
 .mobile-menu.is-open{transform:translateY(0)}
 .mobile-menu nav{display:grid}
-.mobile-menu nav a{font-size:clamp(44px,12vw,80px);letter-spacing:-.05em;line-height:1.03; rgba(255,255,255,.16);padding:14px 0;color:#fff}
-.mobile-menu nav span{font-size:10px;letter-spacing:.12em;margin-right:14px;vertical-align:top;color:rgba(255,255,255,.48)}
+.mobile-menu nav a{font-size:clamp(44px,12vw,80px);letter-spacing:-.05em;line-height:1.03;  padding:14px 0;color:#fff}
+.mobile-menu nav span{font-size:10px;letter-spacing:.12em;margin-right:14px;vertical-align:top; color:rgba(255,255,255,.48)}
 .mobile-menu p{font-size:11px;letter-spacing:.14em;line-height:1.8;color:rgba(255,255,255,.62)}
 
 /* MOBILE MENU CTA FIX START */
@@ -1453,4 +1453,10 @@ linear-gradient(135deg,#201f1c 0%,#555047 35%,#2c2a26 65%,#111 100%)}
   opacity:.4;
   font-size:.65em;
   margin:0 14px;
+}
+
+/* 리뷰 카드 위 중복 라인 제거 */
+.review-card{
+  border-top:0;
+  padding-top:0;
 }
