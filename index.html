@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0b" />
+  <meta name="description" content="GRAVITY MUSIC STUDIO — Guitar, Vocal, Songwriting in Seoul." />
+  <title>GRAVITY MUSIC STUDIO</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="./styles.css" />
+
+  <style>
+    /* 실제 이미지가 기존 placeholder 스타일에 가려지지 않도록 하는 공통 규칙 */
+    .media-with-image,
+    .album-with-image {
+      position: relative;
+      overflow: hidden;
+      background: none !important;
+    }
+
+    .media-with-image > img,
+    .media-with-image > picture,
+    .media-with-image > picture > img,
+    .album-with-image > img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .media-with-image > img,
+    .media-with-image > picture,
+    .album-with-image > img {
+      position: absolute;
+      inset: 0;
+    }
+
+    .media-with-image > picture > img {
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .media-with-image > img,
+    .album-with-image > img {
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* 인물 사진은 얼굴이 잘리지 않게 살짝 위쪽 기준 */
+    .artist__portrait.media-with-image > img {
+      object-position: center 30%;
+    }
+
+    /* 히어로는 인물이 오른쪽에 있는 사진 기준 */
+    .hero__media.media-with-image > picture > img {
+      object-position: center center;
+    }
+
+    /* 앨범 커버 */
+    .album-with-image {
+      aspect-ratio: 1 / 1;
+    }
+
+    /* 기존 placeholder 안내 문구가 남아 있다면 숨김 */
+    .media-with-image .media-placeholder__label,
+    .media-with-image .media-placeholder__image,
+    .media-with-image > span,
+    .media-with-image > small,
+    .album-with-image > span,
+    .album-with-image > small {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-loader" aria-hidden="true">
+    <div class="page-loader__word">GRAVITY</div>
+    <div class="page-loader__line"><span></span></div>
+  </div>
+
+  <div class="noise" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"></div>
+  <div class="cursor-follower" aria-hidden="true"></div>
+
+  <header class="site-header" data-header>
+    <a class="brand" href="#top" aria-label="GRAVITY home">
+      <img src="./assets/gravity-logo-white.png" alt="GRAVITY" class="brand__logo" />
+      <span class="brand__sub">MUSIC STUDIO</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="#lessons">LESSONS</a>
+      <a href="#artist">ARTIST</a>
+      <a href="#reviews">REVIEWS</a>
+      <a href="#location">LOCATION</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
+
+    <button class="menu-toggle" aria-label="메뉴 열기" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" aria-hidden="true">
+    <nav>
+      <a href="#lessons"><span></span>LESSONS</a>
+      <a href="#artist"><span></span>ARTIST</a>
+      <a href="#reviews"><span></span>REVIEWS</a>
+      <a href="#contact"><span></span>CONTACT</a>
+    </nav>
+
+    <div class="mobile-menu__bottom">
+      <a class="mobile-menu__call" href="tel:01000000000">
+        <span>전화 상담하기</span>
+        <b>↗</b>
+      </a>
+      <p>GUITAR · VOCAL · SONGWRITING<br />SEOUL</p>
+    </div>
+  </div>
+
+  <main id="top">
+    <!-- 01 HERO -->
+    <section class="hero dark-section" data-header-theme="light">
+      <div class="hero__media media-placeholder media-with-image" data-parallax="0.12">
+        <picture>
+          <source media="(max-width: 768px)" srcset="./assets/hero-mobile.webp" />
+          <img
+            src="./assets/hero-desktop.webp"
+            alt="GRAVITY MUSIC STUDIO"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
+      </div>
+
+      <div class="hero__shade"></div>
+
+      <div class="hero__topline">
+        <span>기타 · 보컬 · 송라이팅</span>
+        <span>서울 · 신정동</span>
+      </div>
+
+      <div class="hero__title-wrap">
+        <div class="hero__headline">
+          <h1 class="hero__title split-hero" aria-label="GRAVITY">GRAVITY</h1>
+
+          <a class="hero__cta magnetic" href="#contact">
+            <span>수강 문의</span>
+            <b>↗</b>
+          </a>
+        </div>
+
+        <div class="hero__meta">
+          <span>MUSIC STUDIO · SEOUL</span>
+          <span class="hero__scroll">SCROLL <i></i></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 STATEMENT -->
+    <section class="statement light-section" data-header-theme="dark">
+      <div class="statement__eyebrow reveal">ABOUT GRAVITY</div>
+      <div class="statement__grid">
+        <div>
+          <h2 class="display statement__title reveal-lines">
+            EVERYONE HAS<br />
+            THEIR OWN SOUND.
+          </h2>
+          <p class="statement__copy reveal">
+            처음 음악을 시작하는 사람부터<br />
+            자신의 노래를 만들고 싶은 사람까지.<br />
+            각자의 속도와 방향에 맞춰<br />
+            당신의 음악을 함께 만들어갑니다.
+          </p>
+        </div>
+
+        <div class="statement__media media-placeholder media-with-image image-reveal reveal">
+          <img
+            src="./assets/about-studio.webp"
+            alt="GRAVITY MUSIC STUDIO 작업 공간"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee dark-section" aria-hidden="true" data-header-theme="light">
+      <div class="marquee__track">
+        <span>GUITAR — VOCAL — SONGWRITING — GRAVITY — MUSIC STUDIO</span>
+        <span>GUITAR — VOCAL — SONGWRITING — GRAVITY — MUSIC STUDIO</span>
+      </div>
+    </div>
+
+    <!-- 03 LESSONS -->
+    <section class="lessons dark-section" id="lessons" data-header-theme="light">
+      <div class="section-head">
+        <span>03 / LESSONS</span>
+
+      </div>
+
+      <article class="lesson lesson--guitar">
+        <div class="lesson__sticky">
+          <div class="lesson__number">01</div>
+          <div class="lesson__text">
+            <span class="eyebrow">ACOUSTIC · ELECTRIC</span>
+            <h3 class="lesson__title">GUITAR</h3>
+            <p>처음 기타를 잡는 입문자부터<br />좋아하는 음악을 직접 연주하고 싶은 분까지.</p>
+          </div>
+        </div>
+        <div class="lesson__media media-placeholder media-with-image image-reveal" data-parallax="0.05">
+          <img
+            src="./assets/lesson-guitar.webp"
+            alt="기타 레슨"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </article>
+
+      <article class="lesson lesson--vocal">
+        <div class="lesson__media media-placeholder media-with-image image-reveal" data-parallax="0.04">
+          <img
+            src="./assets/lesson-vocal.webp"
+            alt="보컬 레슨"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="lesson__sticky lesson__sticky--right">
+          <div class="lesson__number">02</div>
+          <div class="lesson__text">
+            <span class="eyebrow">VOICE · EXPRESSION</span>
+            <h3 class="lesson__title">VOCAL</h3>
+            <p>자신의 목소리를 이해하고<br />더 편안하고 자연스럽게 노래하는 법을 배웁니다.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="lesson lesson--song">
+        <div class="lesson__sticky">
+          <div class="lesson__number">03</div>
+          <div class="lesson__text">
+            <span class="eyebrow">WRITING · COMPOSITION</span>
+            <h3 class="lesson__title lesson__title--long">SONG<br />WRITING</h3>
+            <p>곡을 쓰고 노래하며<br />자신만의 음악을 완성합니다.</p>
+          </div>
+        </div>
+        <div class="lesson__media media-placeholder media-with-image image-reveal" data-parallax="0.05">
+          <img
+            src="./assets/lesson-songwriting.webp"
+            alt="송라이팅 작업"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </article>
+
+      <div class="lesson__footer reveal">
+        <span>1:1 PERSONAL LESSON</span>
+        <i></i>
+        <span>GROUP LESSON</span>
+      </div>
+    </section>
+
+
+    <!-- 04 ARTIST -->
+    <section class="artist light-section" id="artist" data-header-theme="dark">
+      <div class="section-head section-head--dark">
+        <span>04 / THE ARTIST</span>
+        <p>실제로 음악을 만들고,<br />무대에 서는 사람이 가르칩니다.</p>
+      </div>
+
+      <div class="artist__grid">
+        <div class="artist__portrait media-placeholder media-with-image image-reveal reveal">
+          <img
+            src="./assets/artist-jeon-chain.webp"
+            alt="GRAVITY MUSIC STUDIO Artist & Director"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+
+        <div class="artist__content">
+          <span class="eyebrow reveal">ARTIST & DIRECTOR</span>
+          <h2 class="display artist__title reveal-lines">
+            FROM LESSON<br />
+            TO YOUR MUSIC.
+          </h2>
+          <p class="artist__copy reveal">
+            직접 음악을 만들고, 녹음하고, 무대에 서는<br />
+            뮤지션이 당신의 음악 여정을 함께합니다.
+          </p>
+
+          <div class="artist__info reveal">
+            <div>
+              <strong>JEON CHAIN</strong>
+              <span>Artist & Director</span>
+            </div>
+            <ul>
+              <li>보컬</li>
+              <li>기타</li>
+              <li>작사</li>
+              <li>작곡</li>
+              <li>프로듀싱</li>
+            </ul>
+          </div>
+
+
+          <div class="artist__media-credit reveal">
+            <span>SELECTED MEDIA</span>
+            <strong>KBS · 동네 한 바퀴</strong>
+          </div>
+
+          <div class="releases reveal">
+            <div class="releases__head">
+              <span>RELEASES</span>
+              <a href="#" class="text-link">LISTEN <b>↗</b></a>
+            </div>
+            <div class="releases__grid">
+              <div class="album-placeholder album-with-image">
+                <img src="./assets/release-01.webp" alt="Release 01" loading="lazy" decoding="async" />
+              </div>
+              <div class="album-placeholder album-with-image">
+                <img src="./assets/release-02.webp" alt="Release 02" loading="lazy" decoding="async" />
+              </div>
+              <div class="album-placeholder album-with-image">
+                <img src="./assets/release-03.webp" alt="Release 03" loading="lazy" decoding="async" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 MOMENTS -->
+    <section class="moments dark-section" data-header-theme="light">
+      <div class="section-head">
+        <span>05 / GRAVITY MOMENTS</span>
+        <p>MUSIC, PRACTICE<br />AND THE MOMENTS BETWEEN.</p>
+      </div>
+
+      <div class="moments__collage">
+        <div class="moment media-placeholder media-with-image image-reveal moment--a">
+          <img src="./assets/moment-01.webp" alt="Gravity moment 01" loading="lazy" decoding="async" />
+        </div>
+        <div class="moment media-placeholder media-with-image image-reveal moment--b">
+          <img src="./assets/moment-02.webp" alt="Gravity moment 02" loading="lazy" decoding="async" />
+        </div>
+        <div class="moment media-placeholder media-with-image image-reveal moment--c">
+          <img src="./assets/moment-03.webp" alt="Gravity moment 03" loading="lazy" decoding="async" />
+        </div>
+        <div class="moment media-placeholder media-with-image image-reveal moment--d">
+          <img src="./assets/moment-04.webp" alt="Gravity moment 04" loading="lazy" decoding="async" />
+        </div>
+        <div class="moment media-placeholder media-with-image image-reveal moment--e">
+          <img src="./assets/moment-05.webp" alt="Gravity moment 05" loading="lazy" decoding="async" />
+        </div>
+        <div class="moment media-placeholder media-with-image image-reveal moment--f">
+          <img src="./assets/moment-06.webp" alt="Gravity moment 06" loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </section>
+    <!-- 06 REVIEWS -->
+    <section class="reviews light-section" id="reviews" data-header-theme="dark">
+      <div class="reviews__head reveal">
+        <span class="reviews__kicker">06 / STUDENT REVIEWS</span>
+        <p class="reviews__intro">
+          수업을 먼저 경험한 분들의 이야기.<br />
+          GRAVITY에서 음악을 시작한 실제 수강생 리뷰를 소개합니다.
+        </p>
+      </div>
+
+      <article class="review-feature reveal">
+        <div class="review-feature__media image-reveal">
+          <img src="./assets/review-01.webp" alt="GRAVITY 수강생 네이버 리뷰 사진 01" loading="lazy" decoding="async" />
+        </div>
+
+        <div class="review-feature__content">
+          <div class="review-feature__meta">
+            <span>NAVER PLACE REVIEW</span>
+            <span>01</span>
+          </div>
+
+          <!-- 아래 문구를 네이버 리뷰 원문으로 교체하세요 -->
+          <blockquote class="review-feature__quote">
+            "덕분에 기타를 계속 재미있게, 꾸준히 할 수 있는 것 같아요."
+
+          </blockquote>
+
+          <div class="review-feature__bottom">
+            <p>
+              악기를 안 다뤄보셔서 겁나거나 기타가 멀게만 느껴지는데 배우고는 싶다면 여기서 배워보시길 바랍니다.
+후회 없이 재미있게 배울 거라 장담합니다!
+            </p>
+            <span class="review-source">VISITOR REVIEW · NAVER</span>
+          </div>
+        </div>
+      </article>
+
+      <div class="reviews__rail">
+        <article class="review-card reveal">
+          <div class="review-card__media image-reveal">
+            <img src="./assets/review-02.webp" alt="GRAVITY 수강생 네이버 리뷰 사진 02" loading="lazy" decoding="async" />
+          </div>
+          <div class="review-card__meta">
+            <span>NAVER REVIEW</span>
+            <span>02</span>
+          </div>
+          <!-- 아래 문구를 네이버 리뷰 원문으로 교체하세요 -->
+          <p class="review-card__quote">
+            “벌써 저희 집에서 3명이나 선생님께 기타를 배우게 됐어요! 
+            선생님께서 워낙 재미있게 수업해주셔서 어느덧 3달째 다니고 있습니다.”
+          </p>
+        </article>
+
+        <article class="review-card reveal">
+          <div class="review-card__media image-reveal">
+            <img src="./assets/review-03.webp" alt="GRAVITY 수강생 네이버 리뷰 사진 03" loading="lazy" decoding="async" />
+          </div>
+          <div class="review-card__meta">
+            <span>NAVER REVIEW</span>
+            <span>03</span>
+          </div>
+          <!-- 아래 문구를 네이버 리뷰 원문으로 교체하세요 -->
+          <p class="review-card__quote">
+            “레슨을 받으면서 가장 좋았던 점은 재미였습니다. 
+            무엇보다 수강생의 의견을 적극 반영해 사람마다 맞는 방식으로 알려주신다는 점이 좋았습니다.”
+          </p>
+        </article>
+
+        <article class="review-card reveal">
+          <div class="review-card__media image-reveal">
+            <img src="./assets/review-04.webp" alt="GRAVITY 수강생 네이버 리뷰 사진 04" loading="lazy" decoding="async" />
+          </div>
+          <div class="review-card__meta">
+            <span>NAVER REVIEW</span>
+            <span>04</span>
+          </div>
+          <!-- 아래 문구를 네이버 리뷰 원문으로 교체하세요 -->
+          <p class="review-card__quote">
+            “초보자도 배우기 좋아요 👍 
+            아직 부족한 실력이지만 선생님 가이드로 밴드부도 들어갔습니다.”
+          </p>
+        </article>
+      </div>
+
+      <div class="reviews__footer reveal">
+        <p>
+          더 많은 이야기는 네이버 플레이스에서 확인할 수 있습니다.
+        </p>
+        <a
+          class="reviews__link"
+          href="https://map.naver.com/p/entry/place/1731977364?placePath=%2Freview"
+          target="_blank"
+          rel="noopener"
+        >
+          VIEW ALL REVIEWS <span>↗</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 07 LOCATION -->
+    <section class="location dark-section" id="location" data-header-theme="light">
+      <div class="location__head reveal">
+        <span class="location__kicker">07 / LOCATION</span>
+        <p>
+          GRAVITY MUSIC STUDIO<br />
+          SEOUL · SINJEONG
+        </p>
+      </div>
+
+      <div class="location__grid">
+        <div class="location__intro">
+          <h2 class="display location__title reveal-lines">
+            COME<br />
+            FIND US.
+          </h2>
+
+          <div class="location__info reveal">
+            <div>
+              <span>ADDRESS</span>
+              <p>서울 양천구 은행정로1길 10 1층</p>
+            </div>
+
+            <div>
+              <span>STUDIO</span>
+              <p>GRAVITY MUSIC STUDIO</p>
+            </div>
+
+            <a
+              class="location__link"
+              href="https://naver.me/x5mWvXtH"
+              target="_blank"
+              rel="noopener"
+            >
+              OPEN IN NAVER MAP <b>↗</b>
+            </a>
+          </div>
+        </div>
+
+        <div class="location__map reveal">
+          <!--
+            네이버 지도 삽입 영역
+            아래 placeholder를 네이버 지도 iframe / 지도 HTML로 교체하면 됩니다.
+          -->
+          <div class="location__map-placeholder">
+            <span>NAVER MAP</span>
+            <p>네이버 지도 삽입 영역</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 CONTACT -->
+    <section class="contact light-section" id="contact" data-header-theme="dark">
+      <div class="contact__headline">
+        <h2 class="display contact__title reveal-lines">
+          START<br />
+          YOUR<br />
+          MUSIC.
+        </h2>
+      </div>
+
+      <div class="contact__details">
+        <p class="contact__copy reveal">
+          처음이어도 괜찮습니다.<br />
+          좋아하는 음악 하나만 가지고 오세요.
+        </p>
+
+        <a class="contact__cta magnetic reveal" href="#">
+          <span>수강 문의하기</span>
+          <b>↗</b>
+        </a>
+
+        <div class="contact__list reveal">
+          <a href="#">INSTAGRAM DM <span>↗</span></a>
+          <a href="tel:01000000000">010-0000-0000</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a href="#top" class="footer__brand">GRAVITY</a>
+    <span>© GRAVITY MUSIC STUDIO</span>
+    <a href="#top" class="back-top">BACK TO TOP ↑</a>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>
