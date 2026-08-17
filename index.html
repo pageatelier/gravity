@@ -502,13 +502,15 @@
         </div>
 
         <div class="location__map reveal">
-          <!--
-            네이버 지도 삽입 영역
-            아래 placeholder를 네이버 지도 iframe / 지도 HTML로 교체하면 됩니다.
-          -->
-          <div class="location__map-placeholder">
-            <span>NAVER MAP</span>
-            <p>네이버 지도</p>
+          <div
+            id="naver-map"
+            class="location__map-canvas"
+            aria-label="GRAVITY MUSIC STUDIO 네이버 지도"
+          ></div>
+
+          <div class="location__map-caption" aria-hidden="true">
+            <span>GRAVITY MUSIC STUDIO</span>
+            <span>SEOUL · SINJEONG</span>
           </div>
         </div>
       </div>
@@ -548,6 +550,92 @@
     <span>© GRAVITY MUSIC STUDIO</span>
     <a href="#top" class="back-top">BACK TO TOP ↑</a>
   </footer>
+
+  <script
+    src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=3n7w685tux&submodules=geocoder"
+  ></script>
+
+  <script>
+    (function () {
+      const mapElement = document.getElementById("naver-map");
+      if (!mapElement || !window.naver || !naver.maps) return;
+
+      // 주소 검색이 일시적으로 실패해도 신정동 인근 지도가 먼저 보이도록 하는 fallback.
+      const fallbackCenter = new naver.maps.LatLng(37.5221, 126.8543);
+
+      const map = new naver.maps.Map(mapElement, {
+        center: fallbackCenter,
+        zoom: 17,
+        minZoom: 13,
+        zoomControl: true,
+        zoomControlOptions: {
+          position: naver.maps.Position.RIGHT_CENTER
+        },
+        mapDataControl: false,
+        scaleControl: false,
+        logoControlOptions: {
+          position: naver.maps.Position.BOTTOM_LEFT
+        }
+      });
+
+      function addGravityMarker(position) {
+        map.setCenter(position);
+
+        new naver.maps.Marker({
+          position: position,
+          map: map,
+          title: "GRAVITY MUSIC STUDIO"
+        });
+      }
+
+      // 정확한 도로명 주소를 좌표로 변환해 마커를 배치합니다.
+      if (naver.maps.Service && naver.maps.Service.geocode) {
+        naver.maps.Service.geocode(
+          { address: "서울특별시 양천구 은행정로1길 10" },
+          function (status, response) {
+            if (status !== naver.maps.Service.Status.OK) {
+              return;
+            }
+
+            let lat = null;
+            let lng = null;
+
+            // 현재 응답 형식
+            if (
+              response &&
+              response.v2 &&
+              response.v2.addresses &&
+              response.v2.addresses.length
+            ) {
+              lng = Number(response.v2.addresses[0].x);
+              lat = Number(response.v2.addresses[0].y);
+            }
+
+            // 구형/호환 응답 형식
+            if (
+              (lat === null || lng === null) &&
+              response &&
+              response.result &&
+              response.result.items &&
+              response.result.items.length
+            ) {
+              lng = Number(response.result.items[0].point.x);
+              lat = Number(response.result.items[0].point.y);
+            }
+
+            if (Number.isFinite(lat) && Number.isFinite(lng)) {
+              addGravityMarker(new naver.maps.LatLng(lat, lng));
+            }
+          }
+        );
+      }
+
+      // 반응형 레이아웃 변경 후 지도 타일이 잘리는 현상 방지
+      window.addEventListener("resize", function () {
+        naver.maps.Event.trigger(map, "resize");
+      });
+    })();
+  </script>
 
   <script src="./script.js"></script>
 </body>
