@@ -373,6 +373,13 @@
         </p>
       </div>
 
+      <div class="reviews__title-wrap">
+        <h2 class="display reviews__title reveal-lines">
+          STUDENT<br />
+          VOICES.
+        </h2>
+      </div>
+
       <article class="review-feature reveal">
         <div class="review-feature__media image-reveal">
           <img src="./assets/review-01.webp" alt="GRAVITY 수강생 네이버 리뷰 사진 01" loading="lazy" decoding="async" />
@@ -509,8 +516,8 @@
           ></div>
 
           <div class="location__map-caption" aria-hidden="true">
-            <span>GRAVITY MUSIC STUDIO</span>
-            <span>SEOUL · SINJEONG</span>
+            <span>그래비티 뮤직 스튜디오</span>
+            <span>서울 · 신정동</span>
           </div>
         </div>
       </div>
@@ -581,21 +588,7 @@
         position: gravityPosition,
         map: map,
         visible: true,
-        zIndex: 9999,
-        icon: {
-          content:
-            '<div class="gravity-html-marker">' +
-              '<div class="gravity-html-marker__pin">' +
-                '<span></span>' +
-              '</div>' +
-              '<div class="gravity-html-marker__card">' +
-                '<strong>GRAVITY</strong>' +
-                '<small>MUSIC STUDIO</small>' +
-              '</div>' +
-            '</div>',
-          size: new naver.maps.Size(190, 86),
-          anchor: new naver.maps.Point(29, 64)
-        }
+        zIndex: 999
       });
 
       window.gravityMap = map;
