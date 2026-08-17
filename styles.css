@@ -1460,3 +1460,30 @@ linear-gradient(135deg,#201f1c 0%,#555047 35%,#2c2a26 65%,#111 100%)}
   border-top:0;
   padding-top:0;
 }
+
+/* ===== MOBILE MENU DESKTOP LEAK FIX ===== */
+
+/* PC에서는 모바일 메뉴 자체를 완전히 제거 */
+@media (min-width: 961px){
+  .mobile-menu{
+    display:none !important;
+  }
+}
+
+/* 모바일에서는 닫혀 있을 때 완전히 숨김 */
+@media (max-width: 960px){
+  .mobile-menu{
+    display:flex;
+    visibility:hidden;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(-100%);
+  }
+
+  .mobile-menu.is-open{
+    visibility:visible;
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(0);
+  }
+}
