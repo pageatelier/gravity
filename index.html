@@ -584,16 +584,22 @@
         new naver.maps.Marker({
           position: position,
           map: map,
-          title: "GRAVITY MUSIC STUDIO"
+          title: "GRAVITY MUSIC STUDIO",
+          icon: {
+            content:
+              '<div style="width:18px;height:18px;border-radius:50%;background:#111;border:4px solid #fff;box-shadow:0 2px 12px rgba(0,0,0,.35);"></div>',
+            anchor: new naver.maps.Point(9, 9)
+          }
         });
       }
 
       // 정확한 도로명 주소를 좌표로 변환해 마커를 배치합니다.
       if (naver.maps.Service && naver.maps.Service.geocode) {
         naver.maps.Service.geocode(
-          { address: "서울특별시 양천구 은행정로1길 10" },
+          { query: "서울특별시 양천구 은행정로1길 10" },
           function (status, response) {
             if (status !== naver.maps.Service.Status.OK) {
+              console.warn("GRAVITY map geocoding failed. Check that Geocoding is enabled in the NAVER Maps Application.");
               return;
             }
 
