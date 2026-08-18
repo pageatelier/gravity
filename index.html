@@ -727,7 +727,7 @@
   </footer>
 
   <script
-    src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=3n7w685tux&submodules=geocoder"
+    src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=3n7w685tux"
   ></script>
 
   <script>
@@ -744,18 +744,20 @@
         const isMobile = window.matchMedia("(max-width: 960px)").matches;
 
         /*
-         * 지도는 먼저 바로 보여줍니다.
-         * 아래 좌표는 주소 검색이 늦거나 실패할 때 사용하는 fallback입니다.
+         * GRAVITY MUSIC STUDIO 실제 네이버 플레이스 핀 위치.
+         * 런타임 주소 검색(geocoder)을 사용하지 않아
+         * API 권한/로딩 상태와 관계없이 항상 같은 위치에 표시됩니다.
          */
-        const fallbackPosition = new naver.maps.LatLng(37.5207, 126.8600);
+        const gravityPosition = new naver.maps.LatLng(37.520225, 126.858889);
 
         const map = new naver.maps.Map(mapElement, {
-          center: fallbackPosition,
+          center: gravityPosition,
           zoom: 18,
           zoomControl: !isMobile,
           mapDataControl: false,
           scaleControl: false,
 
+          /* 모바일에서는 페이지 세로 스크롤을 지도가 가로채지 않도록 함 */
           draggable: !isMobile,
           pinchZoom: !isMobile,
           scrollWheel: false,
@@ -766,7 +768,7 @@
         });
 
         const marker = new naver.maps.Marker({
-          position: fallbackPosition,
+          position: gravityPosition,
           map: map,
           visible: true,
           zIndex: 999
@@ -775,72 +777,8 @@
         window.gravityMap = map;
         window.gravityMarker = marker;
 
-        /*
-         * Geocoder 서브모듈이 준비되면
-         * 실제 주소(신정동 1024-39)를 검색해서 지도/핀을 정확한 위치로 이동합니다.
-         * 주소 검색이 실패해도 위 fallback 지도는 그대로 유지됩니다.
-         */
-        function moveToStudioAddress() {
-          if (!naver.maps.Service || typeof naver.maps.Service.geocode !== "function") {
-            return;
-          }
-
-          const queries = [
-            "서울특별시 양천구 신정동 1024-39",
-            "서울특별시 양천구 은행정로1길 10"
-          ];
-
-          function tryGeocode(index) {
-            if (index >= queries.length) {
-              console.warn("GRAVITY 지도 주소 검색 실패 — fallback 위치를 유지합니다.");
-              return;
-            }
-
-            naver.maps.Service.geocode(
-              { query: queries[index] },
-              function (status, response) {
-                const addresses = response && response.v2 && response.v2.addresses
-                  ? response.v2.addresses
-                  : [];
-
-                if (status !== naver.maps.Service.Status.OK || !addresses.length) {
-                  tryGeocode(index + 1);
-                  return;
-                }
-
-                const result = addresses[0];
-                const exactPosition = new naver.maps.LatLng(
-                  Number(result.y),
-                  Number(result.x)
-                );
-
-                marker.setPosition(exactPosition);
-                map.setCenter(exactPosition);
-              }
-            );
-          }
-
-          tryGeocode(0);
-        }
-
-        /*
-         * submodules=geocoder는 비동기로 준비될 수 있어
-         * 즉시 시도 + onJSContentLoaded + 짧은 fallback retry를 함께 둡니다.
-         */
-        moveToStudioAddress();
-
-        const previousOnLoaded = naver.maps.onJSContentLoaded;
-        naver.maps.onJSContentLoaded = function () {
-          if (typeof previousOnLoaded === "function") {
-            previousOnLoaded();
-          }
-          moveToStudioAddress();
-        };
-
-        window.setTimeout(moveToStudioAddress, 500);
-        window.setTimeout(moveToStudioAddress, 1200);
-
         let resizeTicking = false;
+
         window.addEventListener(
           "resize",
           function () {
@@ -850,12 +788,7 @@
             requestAnimationFrame(function () {
               resizeTicking = false;
               naver.maps.Event.trigger(map, "resize");
-
-              const currentPosition = marker.getPosition
-                ? marker.getPosition()
-                : fallbackPosition;
-
-              map.setCenter(currentPosition);
+              map.setCenter(gravityPosition);
             });
           },
           { passive: true }
