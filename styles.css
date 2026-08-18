@@ -638,8 +638,8 @@ linear-gradient(135deg,#201f1c 0%,#555047 35%,#2c2a26 65%,#111 100%)}
 .contact__title{font-size:clamp(92px,14vw,220px);line-height:.72}
 .contact__details{padding-bottom:3vh}
 .contact__copy{font-size:15px;line-height:1.8;margin:0 0 55px}
-.contact__cta{display:flex;justify-content:space-between;align-items:center;background:var(--accent);color:#fff;padding:24px 26px;font-size:13px;letter-spacing:.08em;transition:transform .25s var(--ease)}
-.contact__cta b{font-size:24px;font-weight:400}
+.contact__cta{display:flex;justify-content:space-between;align-items:center;background:var(--accent);color:#fff;padding:17px 18px;font-size:13px;letter-spacing:.08em;transition:transform .25s var(--ease)}
+.contact__cta b{font-size:18px;font-weight:400}
 .contact__list{border-top:1px solid var(--line);margin-top:60px;padding-top:22px;display:grid;gap:14px;font-size:11px;line-height:1.6}
 .contact__list a{display:flex;justify-content:space-between;border-bottom:1px solid rgba(17,17,17,.08);padding-bottom:11px}
 
@@ -1485,5 +1485,406 @@ linear-gradient(135deg,#201f1c 0%,#555047 35%,#2c2a26 65%,#111 100%)}
     opacity:1;
     pointer-events:auto;
     transform:translateY(0);
+  }
+}
+
+/* =========================================================
+   ARTIST SECTION FIX
+   기존 CSS 맨 아래에 그대로 추가
+   ========================================================= */
+
+/* 제목 아래 간격 정리 */
+.artist__title{
+  margin-bottom:48px;
+}
+
+
+/* 이름 + 학력 */
+.artist__info{
+  display:grid;
+  grid-template-columns:160px minmax(0,1fr);
+  gap:40px;
+
+  margin-top:0;
+  padding:24px 0 28px;
+
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+
+.artist__info > div{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.artist__info strong{
+  display:block;
+  font-size:16px;
+  font-weight:600;
+  letter-spacing:.03em;
+}
+
+.artist__info span{
+  font-size:11px;
+  color:#777;
+}
+
+
+/* 학력 */
+.artist__info ul{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+
+  margin:0;
+  padding:0;
+
+  list-style:none;
+  font-size:12px;
+  line-height:1.6;
+  color:#444;
+}
+
+
+/* 활동 경력 */
+.artist__career{
+  margin-top:0;
+}
+
+.artist__career p{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:30px;
+
+  margin:0;
+  padding:17px 0;
+
+  border-bottom:1px solid rgba(17,17,17,.12);
+
+  font-size:12px;
+  line-height:1.6;
+  color:#666;
+
+  word-break:keep-all;
+}
+
+
+/* 숫자/핵심 경력 강조 */
+.artist__career strong{
+  color:var(--ink);
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:-.02em;
+  text-align:right;
+}
+
+
+/* 혹시 이전 ARTIST 코드가 HTML에 남아 있다면 숨김 */
+.artist__media-credit,
+.releases{
+  display:none !important;
+}
+
+
+/* ========================
+   TABLET
+   ======================== */
+
+@media (max-width:960px){
+
+  .artist__grid{
+    gap:46px;
+  }
+
+  .artist__content{
+    padding-top:0;
+  }
+
+  .artist__title{
+    margin-bottom:38px;
+  }
+
+}
+
+
+/* ========================
+   MOBILE
+   ======================== */
+
+@media (max-width:640px){
+
+  .artist__grid{
+    margin-top:48px;
+  }
+
+  .artist__title{
+    font-size:15vw;
+    line-height:.88;
+    margin:18px 0 34px;
+  }
+
+  .artist__info{
+    grid-template-columns:1fr;
+    gap:22px;
+    padding:20px 0 22px;
+  }
+
+  .artist__info ul{
+    gap:6px;
+    font-size:11.5px;
+  }
+
+  .artist__career p{
+    display:block;
+    padding:15px 0;
+    font-size:11.5px;
+    line-height:1.65;
+  }
+
+  .artist__career strong{
+    display:block;
+    margin-top:2px;
+
+    font-size:13px;
+    text-align:left;
+  }
+
+}
+
+/* =========================================================
+   MOBILE PERFORMANCE OPTIMIZATION
+   모바일 스크롤 중 GPU 합성/필터/clip-path 비용을 줄임.
+   데스크톱 디자인과 인터랙션은 그대로 유지.
+   ========================================================= */
+@media (max-width:960px){
+
+  /* 고정 SVG turbulence 레이어 제거 */
+  .noise{
+    display:none !important;
+  }
+
+  /* 모바일에서는 parallax 비활성화 */
+  [data-parallax]{
+    transform:none !important;
+    will-change:auto !important;
+  }
+
+  /* 히어로의 장시간 확대 애니메이션 제거 */
+  .hero__media.media-with-image > picture > img{
+    animation:none !important;
+    transform:scale(1.025) !important;
+    will-change:auto !important;
+  }
+
+  /* 실시간 blur 합성 제거 */
+  .hero__cta,
+  .location__map-caption{
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+
+  /* 무거운 clip-path 대신 가벼운 fade-up */
+  .image-reveal{
+    clip-path:none !important;
+    opacity:0;
+    transform:translate3d(0,18px,0);
+    transition:
+      opacity .65s var(--ease),
+      transform .65s var(--ease);
+    will-change:opacity,transform;
+  }
+
+  .image-reveal.is-visible{
+    opacity:1;
+    transform:translate3d(0,0,0);
+    will-change:auto;
+  }
+
+  /* 터치 환경에서는 이미지 filter/hover 합성 제거 */
+  .moment.media-with-image > img{
+    filter:none !important;
+    transform:none !important;
+    transition:none !important;
+    will-change:auto !important;
+  }
+
+  /* 지도 전체 filter는 모바일에서 제거 */
+  .location__map-canvas{
+    filter:none !important;
+  }
+
+  /* 고정 UI 레이어 안정화 */
+  .site-header,
+  .mobile-menu{
+    transform:translateZ(0);
+    backface-visibility:hidden;
+  }
+
+  .mobile-menu:not(.is-open){
+    visibility:hidden;
+    pointer-events:none;
+  }
+}
+
+@media (max-width:640px){
+  .reveal{
+    transform:translateY(24px);
+    transition-duration:.68s;
+  }
+
+  .reveal.is-visible{
+    transform:translateY(0);
+  }
+
+  .reveal-lines .line > span{
+    transition-duration:.78s;
+  }
+}
+
+/* ===== REVIEW FEATURE LAYOUT FIX ===== */
+
+.review-feature__content{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  padding:18px 0 8px;
+}
+
+.review-feature__quote{
+  margin:70px 0 48px;
+}
+
+.review-feature__bottom{
+  margin-top:0;
+}
+
+.review-feature__media{
+  min-height:560px;
+}
+
+.review-feature__bottom p{
+  margin:0;
+  max-width:520px;
+  font-size:13px;
+  line-height:1.8;
+  color:#555;
+  word-break:keep-all;
+}
+
+/* ===== MOBILE MENU CTA ACCENT ===== */
+.mobile-menu__call{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+/* 모바일에서 hover가 남아 흰색으로 바뀌는 현상 방지 */
+.mobile-menu__call:hover,
+.mobile-menu__call:active{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+.mobile-menu__call b{
+  color:#fff;
+}
+
+@media (hover:hover) and (pointer:fine){
+  .mobile-menu__call:hover{
+    opacity:.88;
+  }
+}
+
+/* ===== CONTACT PHONE COPY ===== */
+
+.contact__copy-phone{
+  appearance:none;
+  -webkit-appearance:none;
+  width:100%;
+  border:0;
+  border-bottom:1px solid rgba(17,17,17,.08);
+  background:transparent;
+  padding:0 0 11px;
+  margin:0;
+
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:18px;
+
+  color:var(--ink);
+  font:inherit;
+  font-size:12px;
+  line-height:1.6;
+  text-align:left;
+  cursor:pointer;
+}
+
+.contact__copy-phone span:nth-child(2){
+  text-align:right;
+}
+
+.contact__copy-phone .copy-icon{
+  font-size:9px;
+  letter-spacing:.12em;
+  color:#777;
+}
+
+.copy-toast{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  z-index:9999;
+
+  padding:12px 16px;
+  background:#111;
+  color:#fff;
+
+  font-size:11px;
+  letter-spacing:.04em;
+
+  opacity:0;
+  transform:translateY(8px);
+  pointer-events:none;
+
+  transition:
+    opacity .25s ease,
+    transform .25s ease;
+}
+
+.copy-toast.is-visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+@media (max-width:640px){
+  .contact__copy-phone{
+    grid-template-columns:auto 1fr auto;
+    font-size:12px;
+  }
+
+  .copy-toast{
+    left:22px;
+    right:22px;
+    bottom:22px;
+    text-align:center;
+  }
+}
+
+@media (max-width:640px){
+  .review-feature__media{
+    height:auto !important;
+    min-height:0 !important;
+    aspect-ratio:4 / 3;
+  }
+
+  .review-feature__media img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center 42%;
   }
 }

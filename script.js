@@ -4,6 +4,9 @@
   const $ = (selector, scope = document) => scope.querySelector(selector);
   const $$ = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
 
+  const mobileMq = window.matchMedia("(max-width: 960px)");
+  const finePointerMq = window.matchMedia("(hover: hover) and (pointer: fine)");
+
   /* ---------------------------------------------------------
      01. PAGE LOADER
      가장 먼저 실행 + 다른 인터랙션 오류가 나도 무조건 빠져나오도록 fallback
@@ -134,16 +137,24 @@
      스크롤 시 타이틀과 겹치지 않도록 숨김
      --------------------------------------------------------- */
   const heroCta = $(".hero__cta");
+  let heroCtaTicking = false;
 
   const updateHeroCta = () => {
+    heroCtaTicking = false;
     if (!heroCta) return;
-    const shouldHide = window.matchMedia("(max-width: 960px)").matches && window.scrollY > 80;
+    const shouldHide = mobileMq.matches && window.scrollY > 80;
     heroCta.classList.toggle("is-hidden", shouldHide);
   };
 
+  const requestHeroCtaUpdate = () => {
+    if (heroCtaTicking) return;
+    heroCtaTicking = true;
+    requestAnimationFrame(updateHeroCta);
+  };
+
   updateHeroCta();
-  window.addEventListener("scroll", updateHeroCta, { passive: true });
-  window.addEventListener("resize", updateHeroCta, { passive: true });
+  window.addEventListener("scroll", requestHeroCtaUpdate, { passive: true });
+  window.addEventListener("resize", requestHeroCtaUpdate, { passive: true });
 
 
   /* ---------------------------------------------------------
@@ -153,34 +164,68 @@
      --------------------------------------------------------- */
   const parallaxItems = $$("[data-parallax]");
   let parallaxTicking = false;
+  let parallaxEnabled = !mobileMq.matches && finePointerMq.matches;
+
+  const clearParallax = () => {
+    parallaxItems.forEach((item) => {
+      item.style.transform = "";
+      item.style.willChange = "";
+    });
+  };
 
   const updateParallax = () => {
+    parallaxTicking = false;
+    if (!parallaxEnabled) return;
+
     const viewportHeight = window.innerHeight;
 
     parallaxItems.forEach((item) => {
       const rect = item.getBoundingClientRect();
-      if (rect.bottom < -200 || rect.top > viewportHeight + 200) return;
+      if (rect.bottom < -160 || rect.top > viewportHeight + 160) return;
 
       const speed = Number(item.dataset.parallax || 0);
       const centerOffset = rect.top + rect.height / 2 - viewportHeight / 2;
       const translateY = centerOffset * -speed;
 
-      item.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0)`;
+      item.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, 0)`;
     });
-
-    parallaxTicking = false;
   };
 
   const requestParallax = () => {
-    if (parallaxTicking) return;
+    if (!parallaxEnabled || parallaxTicking) return;
     parallaxTicking = true;
     requestAnimationFrame(updateParallax);
   };
 
+  const syncParallaxMode = () => {
+    const nextEnabled = !mobileMq.matches && finePointerMq.matches;
+    if (nextEnabled === parallaxEnabled) return;
+
+    parallaxEnabled = nextEnabled;
+
+    if (parallaxEnabled) {
+      parallaxItems.forEach((item) => {
+        item.style.willChange = "transform";
+      });
+      updateParallax();
+    } else {
+      clearParallax();
+    }
+  };
+
   if (parallaxItems.length) {
-    updateParallax();
+    if (parallaxEnabled) {
+      parallaxItems.forEach((item) => {
+        item.style.willChange = "transform";
+      });
+      updateParallax();
+    }
+
     window.addEventListener("scroll", requestParallax, { passive: true });
-    window.addEventListener("resize", requestParallax, { passive: true });
+    window.addEventListener("resize", () => {
+      syncParallaxMode();
+      requestParallax();
+    }, { passive: true });
   }
 
 
@@ -189,7 +234,7 @@
      --------------------------------------------------------- */
   const cursor = $(".cursor");
   const follower = $(".cursor-follower");
-  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const finePointer = finePointerMq.matches;
 
   if (finePointer && cursor && follower) {
     let mouseX = -100;
@@ -250,3 +295,43 @@
   });
 
 })();
+/* ===== PHONE COPY ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  const button = document.querySelector(".contact__copy-phone");
+
+  if (!button) return;
+
+  button.addEventListener("click", async () => {
+    const phone = button.dataset.phone || "01033622557";
+    const copyLabel = button.querySelector(".copy-icon");
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(phone);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = phone;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+
+        document.execCommand("copy");
+        textarea.remove();
+      }
+
+      if (copyLabel) {
+        const original = copyLabel.textContent;
+        copyLabel.textContent = "COPIED";
+
+        setTimeout(() => {
+          copyLabel.textContent = original;
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("전화번호 복사 실패:", error);
+    }
+  });
+});
