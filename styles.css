@@ -1888,3 +1888,346 @@ linear-gradient(135deg,#201f1c 0%,#555047 35%,#2c2a26 65%,#111 100%)}
     object-position:center 42%;
   }
 }
+
+/* =========================================================
+   ARTIST — SELECTED RELEASES / AUDIO PLAYER
+   앨범 커버 자체가 플레이어가 되는 미니멀 에디토리얼 UI
+   ========================================================= */
+.artist__releases{
+  margin-top:42px;
+  padding-top:22px;
+  border-top:1px solid var(--line);
+}
+
+.artist__releases-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:18px;
+  font-size:10px;
+  letter-spacing:.15em;
+  color:#666;
+}
+
+.artist__releases-head span:last-child{
+  font-size:9px;
+  color:#8a8a8a;
+}
+
+.artist__releases-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,180px));
+  gap:18px;
+  align-items:start;
+}
+
+.artist-release{
+  appearance:none;
+  -webkit-appearance:none;
+  min-width:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+
+.artist-release__cover{
+  --progress:0%;
+  position:relative;
+  display:block;
+  aspect-ratio:1 / 1;
+  overflow:hidden;
+  background:#d8d3c9;
+}
+
+.artist-release__cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:scale(1.001);
+  transition:transform .7s var(--ease),filter .45s var(--ease);
+}
+
+.artist-release__shade{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.14);
+  opacity:0;
+  transition:opacity .35s var(--ease);
+}
+
+.artist-release__control{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  transform:translate(-50%,-44%);
+  border:1px solid rgba(255,255,255,.72);
+  background:rgba(0,0,0,.16);
+  color:#fff;
+  font-size:12px;
+  line-height:1;
+  opacity:0;
+  transition:opacity .3s var(--ease),transform .3s var(--ease),background .3s var(--ease);
+}
+
+.artist-release__progress{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:2px;
+  background:rgba(255,255,255,.28);
+  opacity:0;
+  transition:opacity .25s ease;
+}
+
+.artist-release__progress i{
+  display:block;
+  width:var(--progress);
+  height:100%;
+  background:#fff;
+  transition:width .12s linear;
+}
+
+.artist-release__meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:12px;
+  padding-top:10px;
+  border-top:1px solid rgba(17,17,17,.10);
+  margin-top:10px;
+}
+
+.artist-release__meta strong{
+  min-width:0;
+  font-size:12px;
+  line-height:1.45;
+  font-weight:500;
+  letter-spacing:-.01em;
+  word-break:keep-all;
+}
+
+.artist-release__state{
+  flex:0 0 auto;
+  font-size:9px;
+  letter-spacing:.14em;
+  color:#777;
+}
+
+.artist-release.is-playing .artist-release__shade,
+.artist-release.is-paused .artist-release__shade{
+  opacity:1;
+}
+
+.artist-release.is-playing .artist-release__control,
+.artist-release.is-paused .artist-release__control{
+  opacity:1;
+  transform:translate(-50%,-50%);
+}
+
+.artist-release.is-playing .artist-release__progress,
+.artist-release.is-paused .artist-release__progress{
+  opacity:1;
+}
+
+.artist-release.is-playing .artist-release__state{
+  color:var(--accent);
+}
+
+@media (hover:hover) and (pointer:fine){
+  .artist-release:hover .artist-release__cover img{
+    transform:scale(1.025);
+  }
+
+  .artist-release:hover .artist-release__shade{
+    opacity:1;
+  }
+
+  .artist-release:hover .artist-release__control{
+    opacity:1;
+    transform:translate(-50%,-50%);
+  }
+}
+
+@media (max-width:960px){
+  .artist__releases{
+    margin-top:36px;
+  }
+
+  .artist__releases-grid{
+    grid-template-columns:repeat(2,minmax(0,170px));
+  }
+
+  .artist-release__control{
+    opacity:.82;
+    transform:translate(-50%,-50%);
+  }
+}
+
+@media (max-width:640px){
+  .artist__releases{
+    margin-top:32px;
+    padding-top:18px;
+  }
+
+  .artist__releases-head{
+    margin-bottom:14px;
+    font-size:10px;
+  }
+
+  .artist__releases-head span:last-child{
+    font-size:8.5px;
+  }
+
+  .artist__releases-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+
+  .artist-release__meta{
+    display:block;
+    padding-top:9px;
+    margin-top:8px;
+  }
+
+  .artist-release__meta strong{
+    display:block;
+    font-size:11.5px;
+  }
+
+  .artist-release__state{
+    display:block;
+    margin-top:4px;
+    font-size:8.5px;
+  }
+
+  .artist-release__control{
+    width:38px;
+    height:38px;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .artist-release__cover img,
+  .artist-release__shade,
+  .artist-release__control,
+  .artist-release__progress i{
+    transition:none !important;
+  }
+}
+/* ===== /ARTIST SELECTED RELEASES ===== */
+
+/* =========================================================
+   ARTIST RELEASES — PC PORTRAIT-BELOW LAYOUT
+   Desktop: 앨범을 프로필 사진 아래에 작게 배치
+   Mobile/Tablet: 기존처럼 아티스트 정보 다음에 표시
+   ========================================================= */
+
+/* 플레이 버튼은 모든 화면에서 원형 */
+.artist-release__control{
+  border-radius:50%;
+  padding-left:1px;
+}
+
+@media (min-width:961px){
+  .artist__grid{
+    grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);
+    grid-template-rows:auto auto;
+    column-gap:7vw;
+    row-gap:26px;
+    align-items:start;
+  }
+
+  .artist__portrait{
+    grid-column:1;
+    grid-row:1;
+  }
+
+  .artist__content{
+    grid-column:2;
+    grid-row:1 / span 2;
+    padding-top:30px;
+  }
+
+  .artist__releases{
+    grid-column:1;
+    grid-row:2;
+    width:100%;
+    max-width:322px;
+    margin-top:0;
+    padding-top:17px;
+    align-self:start;
+  }
+
+  .artist__releases-head{
+    margin-bottom:12px;
+    font-size:9.5px;
+  }
+
+  /* PC에서는 커버 자체의 재생 아이콘으로 충분해서 안내 문구는 생략 */
+  .artist__releases-head span:last-child{
+    display:none;
+  }
+
+  .artist__releases-grid{
+    grid-template-columns:repeat(2,minmax(0,145px));
+    gap:12px;
+  }
+
+  .artist-release__meta{
+    gap:6px;
+    padding-top:8px;
+    margin-top:8px;
+  }
+
+  .artist-release__meta strong{
+    font-size:11px;
+    line-height:1.35;
+  }
+
+  .artist-release__state{
+    font-size:8px;
+    letter-spacing:.12em;
+  }
+
+  .artist-release__control{
+    width:38px;
+    height:38px;
+    font-size:11px;
+  }
+}
+
+@media (max-width:960px){
+  /* DOM 순서가 portrait → content → releases라 모바일은 기존 읽기 흐름 유지 */
+  .artist__portrait{
+    grid-column:auto;
+    grid-row:auto;
+  }
+
+  .artist__content{
+    grid-column:auto;
+    grid-row:auto;
+  }
+
+  .artist__releases{
+    grid-column:auto;
+    grid-row:auto;
+    margin-top:0;
+  }
+}
+
+@media (max-width:640px){
+  .artist__releases{
+    margin-top:0;
+  }
+}
+/* ===== /ARTIST RELEASES PC PORTRAIT-BELOW LAYOUT ===== */
+

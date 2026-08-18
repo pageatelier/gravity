@@ -335,3 +335,126 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+/* ===== ARTIST RELEASE AUDIO ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  const player = document.getElementById("artistAudioPlayer");
+  const releases = Array.from(document.querySelectorAll(".artist-release[data-audio]"));
+
+  if (!player || !releases.length) return;
+
+  let activeRelease = null;
+  let progressFrame = null;
+
+  const absoluteUrl = (src) => new URL(src, window.location.href).href;
+
+  const setVisualState = (button, state = "idle") => {
+    const control = button.querySelector(".artist-release__control");
+    const label = button.querySelector(".artist-release__state");
+    const track = button.dataset.track || "음원";
+
+    button.classList.toggle("is-playing", state === "playing");
+    button.classList.toggle("is-paused", state === "paused");
+    button.setAttribute("aria-pressed", String(state === "playing"));
+
+    if (state === "playing") {
+      if (control) control.textContent = "Ⅱ";
+      if (label) label.textContent = "PLAYING";
+      button.setAttribute("aria-label", `${track} 일시정지`);
+    } else if (state === "paused") {
+      if (control) control.textContent = "▶";
+      if (label) label.textContent = "PAUSED";
+      button.setAttribute("aria-label", `${track} 계속 재생`);
+    } else {
+      if (control) control.textContent = "▶";
+      if (label) label.textContent = "PLAY";
+      button.setAttribute("aria-label", `${track} 재생`);
+      button.querySelector(".artist-release__cover")?.style.setProperty("--progress", "0%");
+    }
+  };
+
+  const resetOthers = (except = null) => {
+    releases.forEach((button) => {
+      if (button !== except) setVisualState(button, "idle");
+    });
+  };
+
+  const stopProgressLoop = () => {
+    if (progressFrame) cancelAnimationFrame(progressFrame);
+    progressFrame = null;
+  };
+
+  const updateProgress = () => {
+    if (!activeRelease || player.paused) {
+      stopProgressLoop();
+      return;
+    }
+
+    const cover = activeRelease.querySelector(".artist-release__cover");
+    const progress = player.duration && Number.isFinite(player.duration)
+      ? Math.min(100, (player.currentTime / player.duration) * 100)
+      : 0;
+
+    cover?.style.setProperty("--progress", `${progress}%`);
+    progressFrame = requestAnimationFrame(updateProgress);
+  };
+
+  releases.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const src = button.dataset.audio;
+      if (!src) return;
+
+      const nextSrc = absoluteUrl(src);
+      const isSameTrack = player.src === nextSrc;
+
+      try {
+        if (activeRelease === button && isSameTrack && !player.paused) {
+          player.pause();
+          return;
+        }
+
+        if (!isSameTrack) {
+          player.src = src;
+          player.load();
+          if (activeRelease && activeRelease !== button) {
+            setVisualState(activeRelease, "idle");
+          }
+        }
+
+        activeRelease = button;
+        resetOthers(button);
+        await player.play();
+      } catch (error) {
+        console.error("음원 재생 실패:", error);
+        setVisualState(button, "idle");
+      }
+    });
+  });
+
+  player.addEventListener("play", () => {
+    if (!activeRelease) return;
+    setVisualState(activeRelease, "playing");
+    stopProgressLoop();
+    progressFrame = requestAnimationFrame(updateProgress);
+  });
+
+  player.addEventListener("pause", () => {
+    stopProgressLoop();
+    if (!activeRelease || player.ended) return;
+    setVisualState(activeRelease, "paused");
+  });
+
+  player.addEventListener("ended", () => {
+    stopProgressLoop();
+    if (activeRelease) setVisualState(activeRelease, "idle");
+    activeRelease = null;
+    player.currentTime = 0;
+  });
+
+  player.addEventListener("error", () => {
+    stopProgressLoop();
+    if (activeRelease) setVisualState(activeRelease, "idle");
+  });
+});
+/* ===== /ARTIST RELEASE AUDIO ===== */
+
